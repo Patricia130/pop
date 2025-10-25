@@ -10,6 +10,7 @@ import 'package:driver/utils/Preferences.dart';
 import 'package:driver/utils/fire_store_utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:flutter/foundation.dart';
 
 class SplashController extends GetxController {
   @override
