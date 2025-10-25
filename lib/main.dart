@@ -17,9 +17,28 @@ import 'utils/Preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // Initialize Firebase safely: try options-based init first (FlutterFire),
+  // fall back to the native/google-services.json init if that fails.
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  } catch (e, s) {
+    // Log the error and try the native initialization fallback which
+    // reads configuration from android/iOS config files (google-services.json
+    // / GoogleService-Info.plist). This prevents a hard crash on startup
+    // when the generated `firebase_options.dart` is incomplete or invalid.
+    // Keep the app running even if Firebase ultimately fails to initialize.
+    debugPrint('Firebase.initializeApp(options) failed: $e');
+    debugPrint('$s');
+    try {
+      await Firebase.initializeApp();
+    } catch (e2, s2) {
+      debugPrint('Fallback Firebase.initializeApp() failed: $e2');
+      debugPrint('$s2');
+      // Continue without Firebase to avoid crashing the entire app.
+    }
+  }
   await Preferences.initPref();
   EasyLoading.instance
     ..displayDuration = const Duration(seconds: 2)
