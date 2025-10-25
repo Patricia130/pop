@@ -20,11 +20,25 @@ class SplashController extends GetxController {
   }
 
   redirectScreen() async {
-    if (Preferences.getBoolean(Preferences.isFinishOnBoardingKey) == false) {
-      Get.offAll(const OnBoardingScreen());
-    } else {
-      bool isLogin = await FireStoreUtils.isLogin();
-      if (isLogin == true) {
+    try {
+      // Add debug logs
+      debugPrint('[SplashController] Starting redirect flow');
+      
+      if (Preferences.getBoolean(Preferences.isFinishOnBoardingKey) == false) {
+        debugPrint('[SplashController] Showing onboarding');
+        Get.offAll(const OnBoardingScreen());
+        return;
+      }
+
+      bool isLogin = false;
+      try {
+        isLogin = await FireStoreUtils.isLogin();
+      } catch (e) {
+        debugPrint('[SplashController] Error checking login: $e');
+      }
+
+      if (isLogin == true && FirebaseAuth.instance.currentUser != null) {
+        debugPrint('[SplashController] User is logged in, fetching profile');
         await FireStoreUtils.getDriverProfile(FirebaseAuth.instance.currentUser!.uid).then(
           (value) {
             if (value != null) {
@@ -53,12 +67,24 @@ class SplashController extends GetxController {
               } else {
                 Get.offAll(const DashBoardScreen());
               }
+            } else {
+              debugPrint('[SplashController] No user profile found, redirecting to login');
+              Get.offAll(const LoginScreen());
             }
           },
-        );
+        ).catchError((error) {
+          debugPrint('[SplashController] Error fetching profile: $error');
+          Get.offAll(const LoginScreen());
+        });
       } else {
+        debugPrint('[SplashController] User not logged in, showing login screen');
         Get.offAll(const LoginScreen());
       }
+    } catch (e, s) {
+      debugPrint('[SplashController] Error in redirect flow: $e');
+      debugPrint(s.toString());
+      // Fallback to login screen on any error
+      Get.offAll(const LoginScreen());
     }
   }
 }

@@ -20,10 +20,56 @@ class OnBoardingController extends GetxController {
   RxList<OnBoardingModel> onBoardingList = <OnBoardingModel>[].obs;
 
   getOnBoardingData() async {
-    await FireStoreUtils.getOnBoardingList().then((value) {
-      onBoardingList.value = value;
+    try {
+      debugPrint('[OnBoarding] Fetching onboarding data');
+      await FireStoreUtils.getOnBoardingList().then((value) {
+        onBoardingList.value = value;
+        // Add fallback data if Firestore returns empty list
+        if (onBoardingList.isEmpty) {
+          onBoardingList.value = [
+            OnBoardingModel(
+              image: "assets/images/onboarding_1.png",
+              title: "Welcome to GoRide",
+              description: "Your reliable ride companion"
+            ),
+            OnBoardingModel(
+              image: "assets/images/onboarding_2.png",
+              title: "Easy Navigation",
+              description: "Find your way around easily"
+            ),
+            OnBoardingModel(
+              image: "assets/images/onboarding_3.png",
+              title: "Start Driving",
+              description: "Begin your journey with us"
+            ),
+          ];
+        }
+      }).catchError((error) {
+        debugPrint('[OnBoarding] Error fetching data: $error');
+        // Use fallback data on error
+        onBoardingList.value = [
+          OnBoardingModel(
+            image: "assets/images/onboarding_1.png",
+            title: "Welcome to GoRide",
+            description: "Your reliable ride companion"
+          ),
+          OnBoardingModel(
+            image: "assets/images/onboarding_2.png",
+            title: "Easy Navigation",
+            description: "Find your way around easily"
+          ),
+          OnBoardingModel(
+            image: "assets/images/onboarding_3.png",
+            title: "Start Driving",
+            description: "Begin your journey with us"
+          ),
+        ];
+      });
+    } catch (e) {
+      debugPrint('[OnBoarding] Error in getOnBoardingData: $e');
+    } finally {
       isLoading.value = false;
-    });
-    update();
+      update();
+    }
   }
 }
