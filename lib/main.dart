@@ -17,7 +17,9 @@ import 'utils/Preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   await Preferences.initPref();
   EasyLoading.instance
     ..displayDuration = const Duration(seconds: 2)
