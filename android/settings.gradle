@@ -1,3 +1,4 @@
+// ✅ BLOCO PARA FORÇAR A VERSÃO MAIS NOVA DO KOTLIN
 pluginManagement {
     def flutterSdkPath = {
         def properties = new Properties()
@@ -15,16 +16,25 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
+
+    // 🔹 Adiciona o plugin Kotlin mais recente (compatível com Firebase 23+)
+    plugins {
+        id "org.jetbrains.kotlin.android" version "2.1.0"
+    }
 }
 
+// ✅ BLOCO DE PLUGINS PADRÕES DO PROJETO
 plugins {
     id "dev.flutter.flutter-plugin-loader" version "1.0.0"
-    id "com.android.application" version "8.2.1" apply false
-    id 'com.android.library' version '8.2.1' apply false
+    id "com.android.application" version "8.5.2" apply false
+    id "com.android.library" version "8.5.2" apply false
+
     // START: FlutterFire Configuration
     id "com.google.gms.google-services" version "4.4.2" apply false
     // END: FlutterFire Configuration
-    id "org.jetbrains.kotlin.android" version "1.9.10" apply false
+
+    // 🔹 Agora o Kotlin está atualizado e igual ao do build.gradle
+    id "org.jetbrains.kotlin.android" version "2.1.0" apply false
 }
 
 include ":app"
