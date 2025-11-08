@@ -1,25 +1,25 @@
-// 🔹 ADICIONE ESTE BLOCO NO TOPO DO ARQUIVO
+// 🔹 BLOCO DE CONFIGURAÇÃO GERAL — ATUALIZADO
 buildscript {
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        // Plugin principal do Android
-        classpath 'com.android.tools.build:gradle:8.0.2'
+        // 🔸 Plugin principal do Android — atualizado
+        classpath 'com.android.tools.build:gradle:8.5.2'
 
-        // Plugin do Google Services (necessário para Firebase)
+        // 🔸 Plugin do Google Services (obrigatório para Firebase)
         classpath 'com.google.gms:google-services:4.4.2'
 
-        // Plugin do Crashlytics (opcional, mas recomendado)
+        // 🔸 Plugin do Crashlytics (opcional, mas recomendado)
         classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.2'
 
-        // Plugin do Kotlin (caso use Kotlin no app)
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0"
+        // 🔸 Plugin do Kotlin — atualizado para suportar Firebase Auth e Play Integrity
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.0.21"
     }
 }
 
-// 🔹 SEU BLOCO ORIGINAL (mantenha igual)
+// 🔹 BLOCO ORIGINAL (mantém igual)
 allprojects {
     repositories {
         google()
@@ -27,6 +27,7 @@ allprojects {
     }
 }
 
+// 🔹 Diretórios de build (mantém igual)
 rootProject.buildDir = '../build'
 
 subprojects {
@@ -37,12 +38,13 @@ subprojects {
     project.evaluationDependsOn(':app')
     configurations.configureEach {
         resolutionStrategy {
+            // Corrige possíveis conflitos de libs GIF
             force 'pl.droidsonroids.gif:android-gif-drawable:1.2.25'
         }
     }
 }
 
-// 🔹 Mantém o comando clean
+// 🔹 Comando para limpar o projeto
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
