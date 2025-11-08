@@ -3,7 +3,7 @@ plugins {
     // START: FlutterFire Configuration
     id "com.google.gms.google-services"
     // END: FlutterFire Configuration
-    id "kotlin-android"
+    id "org.jetbrains.kotlin.android"
     id "dev.flutter.flutter-gradle-plugin"
 }
 
@@ -60,6 +60,10 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 flutter {
@@ -67,23 +71,26 @@ flutter {
 }
 
 dependencies {
-    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.0.3"
+    // ✅ Correção principal — atualiza para versão compatível
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:2.1.4"
+
     implementation "androidx.multidex:multidex:2.0.1"
 
-    // ✅ Firebase BOM (controla as versões)
+    // ✅ Firebase BOM (controla automaticamente as versões)
     implementation platform("com.google.firebase:firebase-bom:33.2.0")
 
-    // ✅ Firebase Auth (para login com telefone)
+    // Firebase Authentication (login via telefone, etc.)
     implementation "com.google.firebase:firebase-auth"
 
-    // ✅ Play Integrity / SafetyNet (necessário para verificação de número)
+    // Play Integrity / SafetyNet (verificação de número)
     implementation "com.google.android.gms:play-services-safetynet:18.0.1"
 
     // (opcional) Analytics
     implementation "com.google.firebase:firebase-analytics"
 
+    // Cartão de crédito leitura (caso o app use)
     implementation "io.card:android-sdk:5.+"
 }
 
-// ✅ Ativa o plugin do Firebase no final do arquivo
+// ✅ Mantém o plugin Firebase ativo
 apply plugin: "com.google.gms.google-services"
