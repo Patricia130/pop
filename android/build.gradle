@@ -1,3 +1,25 @@
+// 🔹 ADICIONE ESTE BLOCO NO TOPO DO ARQUIVO
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        // Plugin principal do Android
+        classpath 'com.android.tools.build:gradle:8.0.2'
+
+        // Plugin do Google Services (necessário para Firebase)
+        classpath 'com.google.gms:google-services:4.4.2'
+
+        // Plugin do Crashlytics (opcional, mas recomendado)
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.2'
+
+        // Plugin do Kotlin (caso use Kotlin no app)
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.0"
+    }
+}
+
+// 🔹 SEU BLOCO ORIGINAL (mantenha igual)
 allprojects {
     repositories {
         google()
@@ -6,9 +28,11 @@ allprojects {
 }
 
 rootProject.buildDir = '../build'
+
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
+
 subprojects {
     project.evaluationDependsOn(':app')
     configurations.configureEach {
@@ -18,6 +42,7 @@ subprojects {
     }
 }
 
+// 🔹 Mantém o comando clean
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
